@@ -1,0 +1,48 @@
+/* Ensure the container does not exceed the viewport size */
+.container {
+    max-width: 100vw;
+    max-height: 100vh;
+    overflow: hidden;
+}
+
+.video-container {
+    position: relative;
+}
+
+.video-container::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(32, 146, 55, 0.5); /* This is a semi-transparent green */
+    pointer-events: none; /* This allows clicks to pass through the overlay */
+}
+
+video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.results-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none; /* Allows clicks to pass through to the video */
+}
+
+.results-overlay p {
+    color: white; /* Choose a color that stands out */
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    margin: 0.5em;
+    padding: 0.5em;
+    border-radius: 5px;
+}

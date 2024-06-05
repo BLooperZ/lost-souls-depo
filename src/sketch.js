@@ -4,7 +4,7 @@ export default (p5) => {
     // Classifier Variable
     let classifier;
     // Model URL
-    let imageModelURL = 'https://teachablemachine.withgoogle.com/models/s379EsNn/';
+    let imageModelURL = 'https://teachablemachine.withgoogle.com/models/kXD1UtbaY/';
 
     // Video
     let video;
@@ -46,7 +46,7 @@ export default (p5) => {
         p5.fill(255);
         p5.textSize(30);
         p5.textAlign(p5.CENTER);
-        p5.text(label, p5.width / 2, p5.height - 60);
+        p5.text(JSON.stringify(p5.props) + " " + label, p5.width / 2, p5.height - 60);
         p5.image(img, 10, p5.height - 100, 100, 52);
     }
 
@@ -74,6 +74,9 @@ export default (p5) => {
         flippedVideo.remove();
         // Classifiy again!
         p5.classifyVideo();
+        if (label === p5.props.artifactId) {
+            p5.props.handleFound();
+        }
     }
 
     p5.touchStarted = () => {
