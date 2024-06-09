@@ -11,6 +11,31 @@
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
 
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden; /* Prevent scrolling */
+  touch-action: manipulation; /* Prevent default mobile browser behaviors like pinch-to-zoom */
+  background-color: #000; /* Set a background color */
+  color: #fff; /* Set a text color */
+  font-family: 'Arial', sans-serif; /* Set a default font */
+}
+
+#root {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);
@@ -32,4 +57,19 @@
 
 .read-the-docs {
   color: #888;
+}
+
+.floating {  
+  animation-name: floating;
+  animation-duration: 5s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+  margin-left: 10px;
+  margin-top: 5px;
+}
+
+@keyframes floating {
+  0% { transform: translate(0,  0px); }
+  50%  { transform: translate(0, 30px); }
+  100%   { transform: translate(0, -0px); }    
 }

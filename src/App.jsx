@@ -1,13 +1,16 @@
-import React, { createContext, useReducer, useContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useReducer, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import PWABadge from './PWABadge.tsx'
 import { useLocation, useNavigate } from 'react-router-dom';
+import Parallax from 'parallax-js';
+import './App.css'
+import backgroundImage from './assets/background.png';
 
 import VideoClassifier from './VideoClassifier.jsx';
 
 // Initial data for ghosts and artifacts
 const ghostsData = {
     garden: [
-        { id: 'shalom', name: 'Shalom', artifactId: 'bottle', isAwake: false, isFulfilled: false },
+        { id: 'shalom', name: 'Shlomi', artifactId: 'bottle', isAwake: false, isFulfilled: false },
         { id: 'kobi', name: 'Kobi', artifactId: 'cube', isAwake: false, isFulfilled: false },
         { id: 'rami', name: 'Rami', artifactId: 'toothpaste', isAwake: false, isFulfilled: false },
     ],
@@ -88,7 +91,10 @@ const App = () => {
     return (
         <>
             <GhostContext.Provider value={{ state, dispatch }}>
-                <div>
+                <div style={{
+                    height: '100vh',
+                    width: '100vw',
+                }}>
                     <button onClick={handleGoBackToMap}>Go Back to Map</button>
                     <button onClick={handleReset}>Reset</button>
                     {currentEra === null ? (
@@ -116,16 +122,81 @@ const EraMap = ({ setCurrentEra }) => {
 };
 
 // Gallery component
-const Gallery = ({ era, ghostsData, handleSelectGhost }) => (
-    <div>
-        <h1>{era} Gallery</h1>
-        {ghostsData[era].map(ghost => (
-            <button key={ghost.id} onClick={() => handleSelectGhost(ghost.id)} disabled={!ghost.isAwake}>
-                {ghost.name} - {ghost.isFulfilled ? 'Fulfilled' : ghost.isAwake ? 'Restless' : 'Asleep'}
-            </button>
-        ))}
-    </div>
-);
+const Gallery = ({ era, ghostsData, handleSelectGhost }) => {
+    const sceneRef = useRef();
+
+    useEffect(() => {
+        const scene = sceneRef.current;
+        new Parallax(scene, {
+            relativeInput: true,
+        });
+    }
+        , []);
+
+    const positions = [
+        { depth: 1.00, top: '3%', left: '1%', width: 100, height: 200 },
+        { depth: 0.80, top: 0, left: '5%', width: 100, height: 100 },
+        { depth: 0.60, top: '14%', left: 0, width: 150, height: 150 },
+    ]
+
+    return (
+        <div>
+            <h1 >{era} Gallery</h1>
+            <div style={{
+                height: '100vh',
+                width: '100vw',
+            }}>
+                <div ref={sceneRef} className="scene" style={{
+                    margin: 0,
+                    padding: 0,
+                    height: '100vh',
+                    width: '100vw',
+                    backgroundColor: 'black',
+                    overflow: 'hidden',
+                    position: 'absolute',
+                }}>
+                    <div data-depth="0.40" style={{
+                        margin: '-10% -40%',
+                        padding: 0,
+                        height: '150%',
+                        width: '150%',
+                        backgroundImage: `url(${backgroundImage})`,
+                        backgroundSize: 'cover',
+                        overflow: 'hidden',
+                    }}></div>
+                </div>
+                <div style={{
+                    margin: 0,
+                    padding: 0,
+                    // top: '50%',
+                    height: '100vh',
+                    width: '100vw',
+                    backgroundColor: 'transparent',
+                    // position: 'absolute',
+                    overflow: 'hidden',
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'space-around', // Add this line
+                }}>
+                    {ghostsData[era].map((ghost, idx) => {
+                        const { depth, ...pos } = positions[idx];
+                        return (
+                            <button
+                                key={ghost.id}
+                                className="floating"
+                                onClick={() => handleSelectGhost(ghost.id)}
+                                disabled={!ghost.isAwake}
+                                style={{ position: 'relative', ...pos, opacity: ghost.isFulfilled ? 0.5: 1}}
+                            >
+                                {ghost.name} {ghost.isFulfilled ? '😊' : ghost.isAwake ? '😐' : '😴'}
+                            </button>
+                        )
+                    })}
+                </div>
+            </div>
+        </div>
+    )
+};
 
 // Memory component
 const Memory = ({ ghost, artifactId, handleSearch, handleReturn }) => {
