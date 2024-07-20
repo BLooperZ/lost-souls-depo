@@ -120,8 +120,8 @@ html {
   &:hover {
     video.fading {
       animation: none;
-      filter: hue-rotate(30deg) drop-shadow(4px 4px 5px #0fe);
-      opacity: 0.9;
+      /* filter: hue-rotate(30deg) drop-shadow(4px 4px 5px #0fe); */
+      opacity: 0.95;
       /* box-shadow: -10px -10px 30px 3px #0ff inset; */
     }
   }
@@ -136,12 +136,11 @@ html {
 
     video.fading {
       animation: none;
-      filter: hue-rotate(30deg) drop-shadow(4px 4px 5px #0fe);
-      opacity: 0.9;
+      /* filter: hue-rotate(30deg) drop-shadow(4px 4px 5px #0fe); */
+      opacity: 0.95;
       /* box-shadow: -10px -10px 30px 3px #0ff inset; */
     }
   }
-
 }
 
 @keyframes fading {
@@ -150,7 +149,7 @@ html {
   }
 
   25% {
-    opacity: 0.8;
+    opacity: 0.75;
   }
 
   30% {

@@ -8,17 +8,20 @@ import backgroundImage from './assets/background.png';
 import greenButton from './assets/green_button.jpg';
 import redButton from './assets/red_button.jpg';
 import caveman from './assets/caveman.webm';
+import cavemanMov from './assets/CaveMan.mov';
 import cavemaam from './assets/cavemaam.webm';
+import cavemaamMov from './assets/CaveWomen.mov';
 import shaman from './assets/shaman.webm';
+import shamanMov from './assets/Shamanit.mov';
 
 import MapSvg from './MapSvg.jsx';
 
 import VideoClassifier from './VideoClassifier.jsx';
 
 const ghostSourceKeys = {
-    cavemaam: cavemaam,
-    caveman: caveman,
-    shaman: shaman,
+    cavemaam: {vp9: cavemaam, hevc: cavemaamMov},
+    caveman: {vp9: caveman, hevc: cavemanMov},
+    shaman: {vp9: shaman, hevc: shamanMov},
 }
 
 // Initial data for ghosts and artifacts
@@ -228,7 +231,8 @@ const Gallery = ({ era, ghostsData, handleSelectGhost }) => {
                             style={{ position: 'relative', ...pos, aspectRatio: 1 }}
                         >
                             <video autoPlay loop muted playsInline className="fading" style={{ marginLeft: '-30%', width: '180%', height: '180%', objectFit: 'contain', transform, animationDelay, /* opacity: ghost.isFulfilled ? 0.2 : 0.6 */ }}>
-                                <source src={ghostSourceKeys[ghost.source]} type="video/webm" />
+                                <source src={ghostSourceKeys[ghost.source]['hevc']} type='video/mp4; codecs="hvc1"' />
+                                <source src={ghostSourceKeys[ghost.source]['vp9']} type="video/webm" />
                             </video>
                             {/* {ghost.name} {ghost.isFulfilled ? '😊' : ghost.isAwake ? '😐' : '😴'} */}
                         </button>
