@@ -5,20 +5,38 @@ import Parallax from 'parallax-js';
 import './App.css'
 import backgroundImage from './assets/background.png';
 
+import greenButton from './assets/green_button.jpg';
+import redButton from './assets/red_button.jpg';
+import caveman from './assets/caveman.webm';
+import cavemaam from './assets/cavemaam.webm';
+import shaman from './assets/shaman.webm';
+
+import MapSvg from './MapSvg.jsx';
+
 import VideoClassifier from './VideoClassifier.jsx';
+
+const ghostSourceKeys = {
+    cavemaam: cavemaam,
+    caveman: caveman,
+    shaman: shaman,
+}
 
 // Initial data for ghosts and artifacts
 const ghostsData = {
+    metadata: {
+        version: 1,
+    },
     garden: [
-        { id: 'shalom', name: 'Shlomi', artifactId: 'bottle', isAwake: false, isFulfilled: false },
-        { id: 'kobi', name: 'Kobi', artifactId: 'cube', isAwake: false, isFulfilled: false },
-        { id: 'rami', name: 'Rami', artifactId: 'toothpaste', isAwake: false, isFulfilled: false },
+        { id: 'shalom', name: 'Shlomi', artifactId: 'bottle', source: 'caveman', isAwake: false, isFulfilled: false },
+        { id: 'kobi', name: 'Kobi', artifactId: 'cube', source: 'shaman', isAwake: false, isFulfilled: false },
+        { id: 'rami', name: 'Rami', artifactId: 'toothpaste', source: 'cavemaam', isAwake: false, isFulfilled: false },
     ],
     playroom: [
-        { id: 'oded', name: 'Oded', artifactId: 'carrot', isAwake: false, isFulfilled: false },
-        { id: 'hanan', name: 'Hanan', artifactId: 'viewmaster', isAwake: false, isFulfilled: false },
-        { id: 'shayke', name: 'Shayke', artifactId: 'penguin', isAwake: false, isFulfilled: false },
+        { id: 'oded', name: 'Oded', artifactId: 'carrot', source: 'shaman', isAwake: false, isFulfilled: false },
+        { id: 'hanan', name: 'Hanan', artifactId: 'viewmaster', source: 'cavemaam', isAwake: false, isFulfilled: false },
+        { id: 'shayke', name: 'Shayke', artifactId: 'penguin', source: 'caveman', isAwake: false, isFulfilled: false },
     ],
+    lastEra: 'dawnandkalkolithic',
 };
 
 const artifactsData = {
@@ -49,6 +67,11 @@ const ghostReducer = (state, action) => {
                     ghost.id === action.ghostId ? { ...ghost, isFulfilled: true } : ghost
                 )
             };
+        case 'VISIT_ERA':
+            return {
+                ...state,
+                lastEra: action.era
+            }
         default:
             return state;
     }
@@ -77,9 +100,13 @@ const App = () => {
 
     useEffect(() => {
         localStorage.setItem('ghostsData', JSON.stringify(state));
+        if (state.metadata?.version != ghostsData.metadata.version) {
+            handleReset();
+        }
     }, [state]);
 
     const handleGoBackToMap = () => {
+        dispatch({ type: 'VISIT_ERA', era: currentEra });
         setCurrentEra(null);
         navigate('/');
     };
@@ -87,21 +114,60 @@ const App = () => {
     const handleReset = () => {
         dispatch({ type: 'RESET' });
     };
+    const sceneRef = useRef();
 
+    useEffect(() => {
+        const scene = sceneRef.current;
+        new Parallax(scene, {
+            relativeInput: true,
+            invertX: false,
+            invertY: false,
+        });
+    }
+        , []);
     return (
         <>
             <GhostContext.Provider value={{ state, dispatch }}>
                 <div style={{
-                    height: '100vh',
-                    width: '100vw',
+                    height: '100%',
+                    width: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
                 }}>
-                    <button onClick={handleGoBackToMap}>Go Back to Map</button>
-                    <button onClick={handleReset}>Reset</button>
-                    {currentEra === null ? (
-                        <EraMap setCurrentEra={setCurrentEra} />
-                    ) : (
-                        <EraGallery era={currentEra} />
-                    )}
+                    <div ref={sceneRef} className="scene" style={{
+                        margin: 0,
+                        padding: 0,
+                        height: '100lvh',
+                        width: '100vw',
+                        backgroundColor: 'black',
+                        overflow: 'hidden',
+                        position: 'absolute',
+                    }}>
+                        <div data-depth="0.40" style={{
+                            margin: '-30% -10%',
+                            padding: 0,
+                            height: '130%',
+                            width: '120%',
+                            backgroundImage: `url(${backgroundImage})`,
+                            backgroundSize: 'cover',
+                            overflow: 'hidden',
+                        }} />
+                    </div>
+                    <main style={{ position: 'absolute', zIndex: 1, height: '100lvh', width: '100vw', display:'flex', flexDirection:'column' }}>
+                            {currentEra === null ? (
+                                <EraMap setCurrentEra={setCurrentEra} era={state.lastEra || 'dawnandkalkolithic'} />
+                            ) : (
+                                <EraGallery era={currentEra} />
+                            )}
+                        </main>
+                    <div style={{ pointerEvents:"none", position: 'absolute', zIndex: 2, height: '100lvh', width: '100vw', display:'flex', flexDirection:'column'}}>
+                        <nav style={{pointerEvents:"all"}}>
+                            <button onClick={handleGoBackToMap}>Go Back to Map</button>
+                            <button onClick={handleReset}>Reset</button>
+                        </nav>
+                        {/* <h1>{currentEra} Gallery</h1> */}
+                        <footer style={{ marginTop: "auto" }}><p>Something below</p></footer>
+                    </div>
                 </div>
             </GhostContext.Provider>
             <PWABadge />
@@ -110,89 +176,64 @@ const App = () => {
 };
 
 // EraMap component
-const EraMap = ({ setCurrentEra }) => {
+const EraMap = ({ era, setCurrentEra }) => {
     return (
-        <div>
-            <h1>Select an Era</h1>
-            {Object.keys(ghostsData).map(era => (
+        <div style={{height: '100%', margin: 'auto 0', display: 'flex', flexDirection: 'column', justifyContent: 'space-around'}}>
+            <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-around'}}><MapSvg setCurrentEra={setCurrentEra} era={era} /></div>
+            {/* <h1>Select an Era</h1>
+            {Object.keys(ghostsData).filter(era => era !== 'metadata').map(era => (
                 <button key={era} onClick={() => setCurrentEra(era)}>{era}</button>
-            ))}
+            ))} */}
         </div>
     );
 };
 
 // Gallery component
 const Gallery = ({ era, ghostsData, handleSelectGhost }) => {
-    const sceneRef = useRef();
 
-    useEffect(() => {
-        const scene = sceneRef.current;
-        new Parallax(scene, {
-            relativeInput: true,
-        });
-    }
-        , []);
 
     const positions = [
-        { depth: 1.00, top: '3%', left: '1%', width: 100, height: 200 },
-        { depth: 0.80, top: 0, left: '5%', width: 100, height: 100 },
-        { depth: 0.60, top: '14%', left: 0, width: 150, height: 150 },
+        // { depth: 1.00, top: '-7%', left: '6%', transform: 'rotate(6deg)', width: 300, animationDelay: '1s' },
+        // { depth: 0.80, top: '-16%', left: '5%', transform: 'rotate(-12deg)', width: 300, animationDelay: 0 },
+        // { depth: 0.60, top: '7%', left: '-10%', transform: 'rotate(3deg)', width: 300, animationDelay: '0.5s' },
+        { depth: 1.00, top: '-3%', left: '6%', transform: 'rotate(6deg)', width: 300, animationDelay: '1s' },
+        { depth: 0.80, top: '-18%', left: '5%', transform: 'rotate(-12deg)', width: 300, animationDelay: 0 },
+        { depth: 0.60, top: '11%', left: '-10%', transform: 'rotate(3deg)', width: 300, animationDelay: '0.5s' },
     ]
 
     return (
-        <div>
-            <h1 >{era} Gallery</h1>
+        <div onContextMenu={(e) => e.preventDefault()} style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
+
             <div style={{
-                height: '100vh',
-                width: '100vw',
+                margin: 'auto 0',
+                padding: 0,
+                // top: '50%',
+                height: '100%',
+                width: '100%',
+                backgroundColor: 'transparent',
+                // position: 'absolute',
+                overflow: 'hidden',
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-around',
             }}>
-                <div ref={sceneRef} className="scene" style={{
-                    margin: 0,
-                    padding: 0,
-                    height: '100vh',
-                    width: '100vw',
-                    backgroundColor: 'black',
-                    overflow: 'hidden',
-                    position: 'absolute',
-                }}>
-                    <div data-depth="0.40" style={{
-                        margin: '-10% -40%',
-                        padding: 0,
-                        height: '150%',
-                        width: '150%',
-                        backgroundImage: `url(${backgroundImage})`,
-                        backgroundSize: 'cover',
-                        overflow: 'hidden',
-                    }}></div>
-                </div>
-                <div style={{
-                    margin: 0,
-                    padding: 0,
-                    // top: '50%',
-                    height: '100vh',
-                    width: '100vw',
-                    backgroundColor: 'transparent',
-                    // position: 'absolute',
-                    overflow: 'hidden',
-                    display: 'flex',
-                    flexDirection: 'row',
-                    justifyContent: 'space-around', // Add this line
-                }}>
-                    {ghostsData[era].map((ghost, idx) => {
-                        const { depth, ...pos } = positions[idx];
-                        return (
-                            <button
-                                key={ghost.id}
-                                className="floating"
-                                onClick={() => handleSelectGhost(ghost.id)}
-                                disabled={!ghost.isAwake}
-                                style={{ position: 'relative', ...pos, opacity: ghost.isFulfilled ? 0.5: 1}}
-                            >
-                                {ghost.name} {ghost.isFulfilled ? '😊' : ghost.isAwake ? '😐' : '😴'}
-                            </button>
-                        )
-                    })}
-                </div>
+                {ghostsData[era].map((ghost, idx) => {
+                    const { depth, transform, animationDelay, ...pos } = positions[idx];
+                    return (
+                        <button
+                            key={ghost.id}
+                            className="floating button-test"
+                            onClick={() => handleSelectGhost(ghost.id)}
+                            disabled={!ghost.isAwake}
+                            style={{ position: 'relative', ...pos, aspectRatio: 1 }}
+                        >
+                            <video autoPlay loop muted playsInline className="fading" style={{ marginLeft: '-30%', width: '180%', height: '180%', objectFit: 'contain', transform, animationDelay, /* opacity: ghost.isFulfilled ? 0.2 : 0.6 */ }}>
+                                <source src={ghostSourceKeys[ghost.source]} type="video/webm" />
+                            </video>
+                            {/* {ghost.name} {ghost.isFulfilled ? '😊' : ghost.isAwake ? '😐' : '😴'} */}
+                        </button>
+                    )
+                })}
             </div>
         </div>
     )
@@ -217,7 +258,7 @@ const Memory = ({ ghost, artifactId, handleSearch, handleReturn }) => {
 // Search component
 const Search = ({ ghost, artifactId, handleFound, handleReturn }) => {
     return (
-        <div>
+        <div style={{ display: 'flex', height: '100%', width: '100%', flex: 1, flexDirection: 'column' }}>
             <h1>Searching for {artifactsData[artifactId]}</h1>
             {ghost.isFulfilled ? (
                 <p>Artifact already found!</p>

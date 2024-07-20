@@ -28,6 +28,8 @@ const VideoClassifier = ({ artifactId, handleFound }) => {
     const [label, setLabel] = useState('');
     const classifier = useMl5Model(imageModelURL + 'model.json');
 
+    const [ticks, setTicks] = useState(0);
+
     useEffect(() => {
         const video = videoRef.current;
         const canvas = canvasRef.current;
@@ -67,11 +69,13 @@ const VideoClassifier = ({ artifactId, handleFound }) => {
         const canvas = canvasRef.current;
         let intervalId;
 
+        let sticks = 0;
+
         // Classify each frame when the canvas is updated
         if (classifier) {
             intervalId = setInterval(() => {
                 classifier.classify(canvas, gotResult);
-            }, 1000); // Run classification every second
+            }, 500); // Run classification every second
         }
 
         // Handle the classification result
@@ -88,8 +92,11 @@ const VideoClassifier = ({ artifactId, handleFound }) => {
                 labelRef.current = '...';
             }
             if (labelRef.current === artifactId) {
-                handleFound();
+                sticks += 1;
+            } else if (sticks > 0) {
+                sticks -= 1;
             }
+            setTicks(sticks);
         }
 
         // Cleanup function
@@ -100,16 +107,27 @@ const VideoClassifier = ({ artifactId, handleFound }) => {
         };
     }, [artifactId, handleFound, classifier]);
 
+    useEffect(() => {
+        if (ticks === 5) {
+            handleFound();
+        }
+    }, [ticks, handleFound]);
+
     return (
-        <div>
-            <div className="video-container">
-                <video ref={videoRef} style={{ display: 'none' }}></video>
-                <canvas ref={canvasRef} width={window.innerWidth} height={window.innerHeight}></canvas>
+        <>
+            <div style={{ display: 'flex', flexDirection: 'column', flex: 1, height: '100%', width: '100%' }}>
+                <div className="video-container" style={{ flex: 1 }}>
+                    <video ref={videoRef} style={{ display: 'none' }}></video>
+                    <canvas ref={canvasRef} height={600} width={400}></canvas>
+                </div>
+                <div className="results-overlay">
+                    <p>{label} - {ticks}</p>
+                </div>
             </div>
-            <div className="results-overlay">
-                <p>{label}</p>
+            <div style={{ position: 'relative' }}>
+                <footer><p>Something below</p></footer>
             </div>
-        </div>
+        </>
     );
 };
 
