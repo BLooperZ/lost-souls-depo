@@ -151,7 +151,7 @@ const VideoClassifier = ({ artifactId, handleFound, height, contour: Contour }) 
                 {Contour &&
                     <div className="contour" style={{ position: 'absolute', width: '100%', height: '100%', display: 'flex', alignContent: 'center', justifyContent: 'center', flexDirection: 'column', gap: 0 }}>
                         <div style={{ flex: 1, background: 'rgba(32, 146, 55, 0.5)', boxShadow: '0 0 0 1px rgba(32, 146, 55, 0.5)', borderTopLeftRadius: 30, borderTopRightRadius: 30 }} />
-                        <Contour style={{boxShadow: '0 0 0 1px rgba(32, 146, 55, 0.5)', opacity: 0.5}} />
+                        <Contour style={{boxShadow: '0 0 0 1px rgba(32, 146, 55, 0.5)'}} className={ticks > 1 && 'detected'} />
                         <div style={{ flex: 1, background: 'rgba(32, 146, 55, 0.5)', boxShadow: '0 0 0 1px rgba(32, 146, 55, 0.5)', borderBottomLeftRadius: 30, borderBottomRightRadius: 30 }} />
                     </div>
                 }

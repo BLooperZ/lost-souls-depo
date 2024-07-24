@@ -33,6 +33,7 @@ import TextPanel from './assets/text panel.svg';
 import ObjectPanel from './assets/object panel.svg';
 
 import MapNew from './MapNew.jsx';
+import './Contour.css';
 
 const ghostSourceKeys = {
     cavemaam: { vp9: cavemaam, hevc: cavemaamMov },

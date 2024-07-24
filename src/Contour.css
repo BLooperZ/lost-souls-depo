@@ -1,0 +1,18 @@
+.cls-1 {
+  fill: green;
+  opacity: 0.5;
+  stroke-width: 0px;
+}
+
+.cls-2 {
+  fill: none;
+  stroke: #fff;
+  stroke-miterlimit: 10;
+  stroke-width: 5px;
+}
+
+.detected .cls-2 {
+  stroke: lightgreen;
+  filter: drop-shadow(0 0 5px lightgreen);
+  stroke-width: 10px;
+}
