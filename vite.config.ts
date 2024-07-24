@@ -6,23 +6,25 @@ import svgr from "vite-plugin-svgr";
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-    // svgr(),
+    svgr(),
     react(),
     VitePWA({
       registerType: 'autoUpdate',
       injectRegister: false,
 
       pwaAssets: {
-        disabled: false,
+        // disabled: false,
         config: true,
+        overrideManifestIcons: true,
       },
 
       manifest: {
         name: 'האגף לנשמות אבודות',
         short_name: 'האגף',
         description: 'lost-souls-vite-pwa',
-        theme_color: '#36976e',
-        display: 'fullscreen',
+        theme_color: 'black', // #36976e',
+        background_color: 'black',
+        display: 'standalone',
       },
 
       workbox: {

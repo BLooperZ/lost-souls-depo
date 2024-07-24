@@ -1,0 +1,39 @@
+.mapnew-cls-1 {
+    fill: #9ed0f0;
+    cursor: pointer;
+    opacity: 0.7;
+
+    &.selected {
+        fill: #14cc95;
+
+        /* &:hover {
+            fill: #52cfaa;
+            filter: none;
+        } */
+    }
+
+    &.blocked {
+        cursor: not-allowed;
+        opacity: 0.3;
+    }
+
+    &:hover {
+        filter: hue-rotate(10deg) saturate(5);
+    }
+}
+
+.mapnew-cls-1,
+.mapnew-cls-2 {
+    stroke: #000;
+    stroke-miterlimit: 10;
+    stroke-width: 2px;
+}
+
+.mapnew-cls-2 {
+    fill: none;
+}
+
+.mapnew-cls-3 {
+    fill: #231f20;
+    stroke-width: 0px;
+}

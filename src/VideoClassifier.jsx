@@ -21,9 +21,10 @@ const useMl5Model = (modelURL) => {
     return model;
 };
 
-const VideoClassifier = ({ artifactId, handleFound }) => {
+const VideoClassifier = ({ artifactId, handleFound, height, contour: Contour }) => {
     const videoRef = useRef();
     const canvasRef = useRef();
+    // const containerRef = useRef();
     const labelRef = useRef();
     const [label, setLabel] = useState('');
     const classifier = useMl5Model(imageModelURL + 'model.json');
@@ -34,6 +35,7 @@ const VideoClassifier = ({ artifactId, handleFound }) => {
         const video = videoRef.current;
         const canvas = canvasRef.current;
         const context = canvas.getContext('2d');
+        // const container = containerRef.current;
 
         let stream;
 
@@ -55,6 +57,28 @@ const VideoClassifier = ({ artifactId, handleFound }) => {
             context.drawImage(video, 0, 0, canvas.width, canvas.height);
             requestAnimationFrame(draw);
         }
+
+        // const resizeCanvas = () => {
+        //     const bounds = container.getBoundingClientRect();
+        //     // canvas.width = entry.contentRect.width;
+        //     // canvas.height = entry.contentRect.height;
+        //     canvas.width = bounds.width;
+        //     canvas.height = bounds.height;
+
+        //     draw();
+        // }
+
+        // resizeCanvas();
+
+        // const resizeObserver = new ResizeObserver(([entry]) => {
+        //     resizeCanvas();
+
+        //     console.log({ bounds })
+
+        //     draw();
+        // });
+
+        // resizeObserver.observe(container);
 
         // Cleanup function
         return () => {
@@ -115,20 +139,30 @@ const VideoClassifier = ({ artifactId, handleFound }) => {
 
     return (
         <>
-            <div style={{ display: 'flex', flexDirection: 'column', flex: 1, height: '100%', width: '100%' }}>
-                <div className="video-container" style={{ flex: 1 }}>
-                    <video ref={videoRef} style={{ display: 'none' }}></video>
-                    <canvas ref={canvasRef} height={600} width={400}></canvas>
-                </div>
-                <div className="results-overlay">
-                    <p>{label} - {ticks}</p>
-                </div>
+            <div className="video-container">
+                {/* <div ref={containerRef} style={{position: 'relative', width: '100%', height: '100%' }}> */}
+                <video ref={videoRef} style={{ display: 'none' }}></video>
+                {/* <canvas ref={canvasRef} style={{ width: '100%', height: '100%' }}></canvas> */}
+                <canvas ref={canvasRef}
+                    width={400}
+                    height={height}
+                // style={{ position:'absolute', inset: 0 }}
+                ></canvas>
+                {Contour &&
+                    <div className="contour" style={{ position: 'absolute', width: '100%', height: '100%', display: 'flex', alignContent: 'center', justifyContent: 'center', flexDirection: 'column', gap: 0 }}>
+                        <div style={{ flex: 1, background: 'rgba(32, 146, 55, 0.5)', boxShadow: '0 0 0 1px rgba(32, 146, 55, 0.5)', borderTopLeftRadius: 30, borderTopRightRadius: 30 }} />
+                        <Contour style={{boxShadow: '0 0 0 1px rgba(32, 146, 55, 0.5)', opacity: 0.5}} />
+                        <div style={{ flex: 1, background: 'rgba(32, 146, 55, 0.5)', boxShadow: '0 0 0 1px rgba(32, 146, 55, 0.5)', borderBottomLeftRadius: 30, borderBottomRightRadius: 30 }} />
+                    </div>
+                }
             </div>
-            <div style={{ position: 'relative' }}>
-                <footer><p>Something below</p></footer>
+            <div className="results-overlay">
+                <p>{label} - {ticks}</p>
             </div>
         </>
     );
 };
+
+// <VideoClassifier style={{ width: '100%', height: '60%' }} />
 
 export default VideoClassifier;

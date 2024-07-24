@@ -1,0 +1,26 @@
+.cls-1 {
+    fill: url(#linear-gradient);
+  }
+
+  .cls-1, .Graphic_Style_2, .cls-2, .cls-3 {
+    stroke-width: 0px;
+  }
+
+  .Graphic_Style_2 {
+    filter: url(#drop-shadow-1);
+  }
+
+  .Graphic_Style_2, .cls-2, .cls-3 {
+    fill: #fff;
+  }
+
+  .cls-2 {
+    filter: url(#drop-shadow-1-2);
+  }
+
+  .cls-4 {
+    fill: none;
+    stroke: url(#New_Gradient_Swatch_5);
+    stroke-miterlimit: 10;
+    stroke-width: 8px;
+  }

@@ -17,7 +17,7 @@ body,
 html {
   margin: 0;
   padding: 0;
-  height: 100lvh;
+  height: 100svh;
   width: 100vw;
   overflow: hidden;
   /* Prevent scrolling */
@@ -127,8 +127,7 @@ html {
   }
 
   &:active,
-  &:focus,
-  &:visited {
+  &:focus {
     -webkit-tap-highlight-color: transparent;
     outline: none;
     background: none;
@@ -180,5 +179,36 @@ html {
 
   100% {
     opacity: 0.5;
+  }
+}
+
+.bar-floating {
+  animation-name: bar-floating;
+  animation-duration: 5s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+}
+
+@keyframes bar-floating {
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(100%);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.hints {
+  .cls-1 {
+    fill: transparent;
+  }
+  .cls-2 {
+    stroke: #0d0d0d;
+    fill: white;
   }
 }

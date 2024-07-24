@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 76.57 102.58">
+  <defs>
+    <style>
+      .Graphic_Style_2 {
+        filter: url(#drop-shadow-1);
+      }
+
+      .Graphic_Style_2, .cls-1, .cls-2 {
+        fill: #fff;
+        stroke-width: 0px;
+      }
+
+      .cls-1 {
+        filter: url(#drop-shadow-1-2);
+      }
+    </style>
+    <filter id="drop-shadow-1" filterUnits="userSpaceOnUse">
+      <feOffset dx="0" dy="3"/>
+      <feGaussianBlur result="blur" stdDeviation="0"/>
+      <feFlood flood-color="#000" flood-opacity=".7"/>
+      <feComposite in2="blur" operator="in"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <filter id="drop-shadow-1-2" data-name="drop-shadow-1" filterUnits="userSpaceOnUse">
+      <feOffset dx="0" dy="3"/>
+      <feGaussianBlur result="blur-2" stdDeviation="0"/>
+      <feFlood flood-color="#000" flood-opacity=".7"/>
+      <feComposite in2="blur-2" operator="in"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <g id="buttons_2">
+    <g>
+      <path class="cls-1" d="M76.57,64.3l-30.39-4.05,12.48-16.32-16.32,12.48-4.05-30.39-4.05,30.39-16.32-12.48,12.48,16.32L0,64.3l30.39,4.05-12.48,16.32,16.32-12.48,4.05,30.39,4.05-30.39,16.32,12.48-12.48-16.32,30.39-4.05ZM38.28,69.4c-2.82,0-5.1-2.29-5.1-5.1s2.29-5.1,5.1-5.1,5.1,2.29,5.1,5.1-2.29,5.1-5.1,5.1Z"/>
+      <path class="cls-2" d="M34.27,16.18c-.08-.08-.11-.17-.11-.29v-1.44c0-.11.04-.21.11-.29s.17-.11.29-.11h5.81c-.01-.13-.06-.23-.13-.3s-.2-.18-.38-.3-.32-.23-.42-.3l-2.09-1.5c-.66-.48-1.15-.9-1.48-1.25-.33-.35-.56-.73-.69-1.12s-.2-.88-.2-1.46v-.46h-1.16c-.11,0-.21-.04-.29-.11s-.11-.17-.11-.29v-1.39c0-.11.04-.21.11-.29s.17-.11.29-.11h2.62c.23,0,.42.08.58.24.16.16.24.35.24.58v1.82c0,.32.05.58.16.8.11.21.29.43.54.65.25.22.66.53,1.23.95.52-.25.9-.55,1.15-.9s.37-.76.37-1.25v-.7h-1.16c-.11,0-.21-.04-.29-.11s-.11-.17-.11-.29v-1.39c0-.11.04-.21.11-.29s.17-.11.29-.11h2.62c.23,0,.42.08.58.24.16.16.24.35.24.58v1.65c0,.9-.17,1.65-.52,2.26-.35.61-.9,1.11-1.64,1.5.72.53,1.21,1.01,1.47,1.43.26.42.39.95.39,1.59v1.01c0,.24-.08.45-.25.62-.17.17-.37.26-.63.26h-7.26c-.11,0-.21-.04-.29-.11Z"/>
+    </g>
+  </g>
+</svg>

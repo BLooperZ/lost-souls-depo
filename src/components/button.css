@@ -1,0 +1,92 @@
+.button-shape {
+    .inside-ring {
+        fill: url(#New_Gradient_Swatch_6);
+
+        button:hover & {
+            filter: hue-rotate(-10deg);
+        }
+        button:active &, button:focus & {
+            filter: hue-rotate(-20deg) contrast(1.2);
+        }
+    }
+
+    .cls-1,
+    .cls-2,
+    .cls-3,
+    .cls-4,
+    .cls-5,
+    .cls-6,
+    .cls-7 {
+        stroke-width: 0px;
+    }
+
+    .cls-2 {
+        fill: #b4f4fa;
+    }
+
+    .cls-3 {
+        fill: #4bc98a;
+    }
+
+    .outer-ring {
+        fill: url(#grad11);
+
+        button:hover &,
+        button:active & {
+            filter: hue-rotate(20deg);
+            /* fill: url(#grad230); */
+
+        }
+    }
+
+    .cls-5 {
+        fill: url(#grad22);
+        mix-blend-mode: screen;
+    }
+
+    .cls-6 {
+        fill: url(#grad230);
+    }
+
+    .cls-7 {
+        fill: url(#grad239);
+    }
+
+    .cls-8 {
+        isolation: isolate;
+    }
+
+
+
+    .bcls-1 {
+        fill: url(#linear-gradient);
+    }
+
+    .bcls-1,
+    .Graphic_Style_2,
+    .bcls-2,
+    .bcls-3 {
+        stroke-width: 0px;
+    }
+
+    .Graphic_Style_2 {
+        filter: url(#drop-shadow-1);
+    }
+
+    .Graphic_Style_2,
+    .cls-2,
+    .cls-3 {
+        fill: #fff;
+    }
+
+    .bcls-2 {
+        filter: url(#drop-shadow-1-2);
+    }
+
+    .bcls-4 {
+        fill: none;
+        stroke: url(#New_Gradient_Swatch_5);
+        stroke-miterlimit: 10;
+        stroke-width: 8px;
+    }
+}

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72.21 72.21">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #fff;
+        fill-rule: evenodd;
+        stroke-width: 0px;
+      }
+    </style>
+  </defs>
+  <g id="buttons_2">
+    <g id="g913">
+      <path id="path837" class="cls-1" d="M38.13,72.06h33.65v-34.37h-33.65v34.37ZM41.16,54.87c0,7.8,6.21,14.01,13.72,14.01s13.72-6.21,13.72-14.01-6.21-14.01-13.72-14.01-13.72,6.35-13.72,14.01h0Z"/>
+      <path id="path839" class="cls-1" d="M14.44,72.21h6.06v-17.19h-6.06v17.19Z"/>
+      <path id="path841" class="cls-1" d="M54.87,0l-17.33,17.62,17.33,17.76,17.33-17.62L54.87,0Z"/>
+      <path id="path843" class="cls-1" d="M17.47,17.76l17.04,17.19V.57l-17.04,17.19Z"/>
+      <path id="path845" class="cls-1" d="M.43,34.95l17.04-17.19L.43.57v34.37Z"/>
+      <path id="path847" class="cls-1" d="M0,37.84l17.47,15.88,17.47-15.88H0Z"/>
+    </g>
+  </g>
+</svg>
