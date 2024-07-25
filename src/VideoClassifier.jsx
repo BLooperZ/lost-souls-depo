@@ -21,7 +21,7 @@ const useMl5Model = (modelURL) => {
     return model;
 };
 
-const VideoClassifier = ({ artifactId, handleFound, height, contour: Contour }) => {
+const VideoClassifier = ({ artifacts, handleFound, height, contour: Contour }) => {
     const videoRef = useRef();
     const canvasRef = useRef();
     // const containerRef = useRef();
@@ -115,7 +115,7 @@ const VideoClassifier = ({ artifactId, handleFound, height, contour: Contour }) 
                 setLabel('...');
                 labelRef.current = '...';
             }
-            if (labelRef.current === artifactId) {
+            if (artifacts.includes(labelRef.current)) {
                 sticks += 1;
             } else if (sticks > 0) {
                 sticks -= 1;
@@ -129,13 +129,15 @@ const VideoClassifier = ({ artifactId, handleFound, height, contour: Contour }) 
                 clearInterval(intervalId);
             }
         };
-    }, [artifactId, handleFound, classifier]);
+    }, [artifacts, handleFound, classifier]);
 
     useEffect(() => {
         if (ticks === 5) {
             handleFound();
         }
     }, [ticks, handleFound]);
+
+    const detected = ticks > 1 ? {className: 'detected'} : {};
 
     return (
         <>
@@ -151,7 +153,7 @@ const VideoClassifier = ({ artifactId, handleFound, height, contour: Contour }) 
                 {Contour &&
                     <div className="contour" style={{ position: 'absolute', width: '100%', height: '100%', display: 'flex', alignContent: 'center', justifyContent: 'center', flexDirection: 'column', gap: 0 }}>
                         <div style={{ flex: 1, background: 'rgba(32, 146, 55, 0.5)', boxShadow: '0 0 0 1px rgba(32, 146, 55, 0.5)', borderTopLeftRadius: 30, borderTopRightRadius: 30 }} />
-                        <Contour style={{boxShadow: '0 0 0 1px rgba(32, 146, 55, 0.5)'}} className={ticks > 1 && 'detected'} />
+                        <Contour style={{boxShadow: '0 0 0 1px rgba(32, 146, 55, 0.5)'}} {...detected} />
                         <div style={{ flex: 1, background: 'rgba(32, 146, 55, 0.5)', boxShadow: '0 0 0 1px rgba(32, 146, 55, 0.5)', borderBottomLeftRadius: 30, borderBottomRightRadius: 30 }} />
                     </div>
                 }

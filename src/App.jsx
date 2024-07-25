@@ -1,4 +1,4 @@
-import React, { createContext, useReducer, useContext, useState, useEffect, useCallback, useRef } from 'react';
+import React, { createContext, useReducer, useContext, useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import PWABadge from './PWABadge.tsx'
 import { useLocation, useNavigate } from 'react-router-dom';
 import './App.css'
@@ -52,9 +52,9 @@ const ghostsData = {
         { id: 'rami', name: 'Rami', artifactId: 'toothpaste', source: 'cavemaam', isAwake: false, isFulfilled: false },
     ],
     playroom: [
-        { id: 'oded', name: 'Oded', artifactId: 'carrot', source: 'shaman', isAwake: false, isFulfilled: false },
-        { id: 'hanan', name: 'Hanan', artifactId: 'viewmaster', source: 'cavemaam', isAwake: false, isFulfilled: false },
-        { id: 'shayke', name: 'Shayke', artifactId: 'penguin', source: 'caveman', isAwake: false, isFulfilled: false },
+        { id: 'oded', name: 'Oded', artifactId: 'pebble', source: 'shaman', isAwake: false, isFulfilled: false },
+        { id: 'hanan', name: 'Hanan', artifactId: 'mastodon', source: 'cavemaam', isAwake: false, isFulfilled: false },
+        { id: 'shayke', name: 'Shayke', artifactId: 'fire', source: 'caveman', isAwake: false, isFulfilled: false },
     ],
     lastEra: 'playroom',
 };
@@ -63,9 +63,9 @@ const artifactsData = {
     bottle: { name: 'Bottle', video: cavemanVideo, contour: Fire, hint: '___' },
     cube: { name: 'Cube', video: cavemanVideo, contour: Fire, hint: '___' },
     toothpaste: { name: 'Toothpaste', video: cavemanVideo, contour: Fire, hint: '___' },
-    carrot: { name: 'Carrot', video: cavemanVideo, contour: Rock, hint: 'אבן פה, אבן שם, העיקר שהכוכבים מסתדרים בשורה', sol: 'חלוק נחל מעוטר, עורקן א-רוב' },
-    viewmaster: { name: 'View-Master', video: cavemanVideo, contour: Tusk, hint: 'לצוד מהצד, צעד צעד, רק שלא יפיל אותי', sol: 'חט מסטודון, חולון' },
-    penguin: { name: 'Penguin', video: cavemanVideo, contour: Fire, hint: 'טעם חדש ומעניין, להשגיח שלא יישרף', sol: 'צור שרוף, גשר בנות יעקב' }, // only this is correct
+    pebble: { name: 'Pebble', video: cavemanVideo, also: ['haluk'], contour: Rock, hint: 'אבן פה, אבן שם, העיקר שהכוכבים מסתדרים בשורה', sol: 'חלוק נחל מעוטר, עורקן א-רוב' },
+    mastodon: { name: 'Mastodon', video: cavemanVideo, also: ['eleph', 'porcupine'],  contour: Tusk, hint: 'לצוד מהצד, צעד צעד, רק שלא יפיל אותי', sol: 'חט מסטודון, חולון' },
+    fire: { name: 'fire', video: cavemanVideo, contour: Fire, also: [], hint: 'טעם חדש ומעניין, להשגיח שלא יישרף', sol: 'צור שרוף, גשר בנות יעקב' }, // only this is correct
 };
 
 // Ghost context and reducer
@@ -137,13 +137,14 @@ const App = () => {
             dispatch({ type: 'VISIT_ERA', era: currentEra });
         }
         setStage(stage === 'map' ? 'gallery' : 'map');
-        // setCurrentEra(null);
     };
 
     const handleReset = () => {
         dispatch({ type: 'RESET' });
         setStage('gallery');
     };
+
+    const startRoom = () => navigate(`?era=playroom&awaken=true`);
 
     return (
         <>
@@ -159,11 +160,11 @@ const App = () => {
                 }}>
                     <ParallaxBackground />
                     {currentEra === null ? (
-                        <TitleScanner setCurrentEra={() => navigate(`?era=playroom&awaken=true`)} />
+                        <TitleScanner handleReset={handleReset} setCurrentEra={startRoom} />
                     ) : stage === 'map' ? (
-                        <EraMap setCurrentEra={setCurrentEra} era={state.lastEra || 'playroom'} handleGoBackToMap={handleGoBackToMap} />
+                        <EraMap handleReset={handleReset} setCurrentEra={setCurrentEra} era={state.lastEra || 'playroom'} handleGoBackToMap={handleGoBackToMap} />
                     ) : (
-                        <EraGallery era={currentEra} handleGoBackToMap={handleGoBackToMap} setCurrentEra={setCurrentEra} />
+                        <EraGallery handleReset={handleReset} era={currentEra} handleGoBackToMap={handleGoBackToMap} setCurrentEra={setCurrentEra} />
                     )}
                 </div>
             </GhostContext.Provider>
@@ -172,7 +173,14 @@ const App = () => {
     );
 };
 
-const Shell = ({ ui, handleGoBackToMap, children, hideMuseum = false }) => {
+const Shell = ({ ui, handleGoBackToMap, handleReset, children, hideMuseum = false }) => {
+    const [clicks, setClicks] = useState(0);
+
+    useEffect(() => {
+        if (clicks > 5) {
+            handleReset();
+        }
+    }, [clicks]);
     return (
         <>
             <main style={{ position: 'absolute', zIndex: 1, height: '75%', width: '100vw', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
@@ -180,7 +188,7 @@ const Shell = ({ ui, handleGoBackToMap, children, hideMuseum = false }) => {
             </main>
             <div style={{ pointerEvents: "none", position: 'absolute', zIndex: 2, height: '100svh', width: '100vw', display: 'flex', flexDirection: 'column' }}>
                 {!hideMuseum && <nav style={{ pointerEvents: "all", padding: '2em' }}>
-                    <RoundButton symbol="museum" />
+                    <RoundButton onClick={() => setClicks(clicks => clicks + 1)} symbol="museum" />
                 </nav>}
                 <footer style={{ marginTop: "auto", padding: '0.4em', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                     <nav style={{ pointerEvents: "all", display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', height: '100%' }}>
@@ -198,7 +206,7 @@ const TitleScanner = (({ setCurrentEra }) => {
             <img src={titleSvg} style={{ width: '70%', flex: 1 }} />
             <div style={{ height: '40%', zIndex: 1, position: 'relative', flex: 1, margin: '1em 4em' }}>
                 <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', boxShadow: '0 0 0 0.2em white', borderRadius: 30 }}>
-                    <VideoClassifier artifactId={'penguin'} handleFound={setCurrentEra} height={400} />
+                    <VideoClassifier artifacts={['penguin', 'ghosts', 'fire']} handleFound={setCurrentEra} height={400} />
                     <div style={{
                         position: 'absolute',
                         top: 0, margin: 0, zIndex: 2, height: '100%', width: '110%'
@@ -218,8 +226,8 @@ const TitleScanner = (({ setCurrentEra }) => {
 })
 
 // EraMap component
-const EraMap = ({ era, handleGoBackToMap, setCurrentEra }) => {
-    const renderUI = () => (
+const EraMap = ({ era, handleGoBackToMap, setCurrentEra, handleReset }) => {
+    const RenderUI = () => (
         <>
             {/* <Compass style={{ background: 'red', width: 200, height: 100 }} /> */}
             < nav style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around', alignContent: 'center', height: 130, width: '100%', backgroundImage: `url(${Panel})`, backgroundSize: '100% 100%', backgroundPosition: 'center' }}>
@@ -229,9 +237,10 @@ const EraMap = ({ era, handleGoBackToMap, setCurrentEra }) => {
                 {/* <button onClick={handleReset}>Reset</button> */}
             </nav >
         </>
-    )
+    );
+
     return (
-        <Shell ui={renderUI()}>
+        <Shell ui={<RenderUI />} handleReset={handleReset}>
             <div style={{ margin: '3em' }} >
                 <MapNew style={{ width: '100%', height: '100%' }} onClick={handleGoBackToMap} era={era} />
             </div>
@@ -365,12 +374,11 @@ const Memory = ({ ghost, artifactId, handleSearch, handleReturn }) => {
 const Search = ({ ghost, artifactId, handleFound, handleReturn }) => {
     return (
         <>
-            {/* <h1>Searching for {artifactsData[artifactId].name}</h1> */}
             <div style={{ margin: '1em 0.5em', alignItems: 'center' }} >
                 {ghost.isFulfilled ? (
                     <p>Artifact already found!</p>
                 ) : (
-                    <VideoClassifier artifactId={artifactId} handleFound={handleFound} height={600} contour={artifactsData[artifactId].contour} />
+                    <VideoClassifier artifacts={['penguin', artifactId, ...artifactsData[artifactId].also]} handleFound={handleFound} height={600} contour={artifactsData[artifactId].contour} />
                 )}
             </div>
         </>
@@ -378,7 +386,7 @@ const Search = ({ ghost, artifactId, handleFound, handleReturn }) => {
 };
 
 // EraGallery component
-const EraGallery = ({ era, handleGoBackToMap, setCurrentEra }) => {
+const EraGallery = ({ era, handleGoBackToMap, setCurrentEra, handleReset }) => {
     const { state: ghostsData, dispatch } = useContext(GhostContext);
     const [selectedGhost, setSelectedGhost] = useState(null);
     const [currentStage, setCurrentStage] = useState('gallery'); // Default stage
@@ -427,7 +435,7 @@ const EraGallery = ({ era, handleGoBackToMap, setCurrentEra }) => {
         // Add more stages as needed
     };
 
-    const renderUI = () => (
+    const RenderUI = () => (
         <>
             {currentStage === 'memory' && !ghost.isFulfilled && (
                 <button className='button-test' onClick={goToSearch} style={{ width: '100%', height: '1%' }}>
@@ -442,10 +450,10 @@ const EraGallery = ({ era, handleGoBackToMap, setCurrentEra }) => {
                 {/* <button onClick={handleReset}>Reset</button> */}
             </nav >
         </>
-    )
+    );
 
     // return renderStage();
-    return <Shell ui={renderUI()} handleGoBackToMap={handleGoBackToMap}>{renderStage()}</Shell>
+    return <Shell ui={<RenderUI />} handleReset={handleReset} handleGoBackToMap={handleGoBackToMap}>{renderStage()}</Shell>
 };
 
 
